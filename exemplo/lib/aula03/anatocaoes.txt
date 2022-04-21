@@ -1,0 +1,9 @@
+Funções
+
+Conteúdo da aula
+- passar funções por parâmetro
+- funções anônimas
+- arrow function
+
+
+

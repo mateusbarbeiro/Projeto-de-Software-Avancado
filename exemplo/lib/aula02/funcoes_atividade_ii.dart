@@ -3,7 +3,7 @@ import 'dart:io';
 List<String> produtos = ['Oleo', 'Filtro de ar', 'Amortecedor'];
 List<String> produtosSelecionados = [];
 
-// função sem retorno e sem parametro
+// função sem retorno e sem parâmetro
 void menu() {
   while (true) {
     print("""
@@ -62,5 +62,4 @@ String selecionarDosProdutosSelecionados() {
   return produtosSelecionados[id];
 }
 
-// função com retorno e com parametro
-
+// função com retorno e com parâmetro
