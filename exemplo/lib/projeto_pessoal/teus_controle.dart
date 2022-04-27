@@ -1,52 +1,78 @@
+// 27/04/2022 -> C
+
 import 'dart:io';
 
-List<Produto> produtos2 = [
+List<Produto> produtos = [
   Produto('Oleo', 10.0),
   Produto('Filtro de ar', 25.0),
   Produto('Amortecedor', 150.5),
 ];
 
-List<Produto> produtosSelecionados2 = [];
+List<Produto> produtosSelecionados = [];
 
 // função sem retorno e sem parâmetro
 void menu() {
   while (true) {
     // lista produtos selecionados
-    if (produtosSelecionados2.isNotEmpty) {
-      exibeSelecionados();
+    if (produtosSelecionados.isNotEmpty) {
+      listarProdutosSelecionados();
     } else {
       print("Não há produtos selecionados");
     }
 
     print("""
-\nOperações
-1 - adicionar produto
-2 - remover produto
-3 - finalizar e listar produtos
+
+Operações
+1 - Selecionar um produto
+2 - Remover um produto selecionado
+3 - Finalizar e listar produtos
 
 Digite a operação: """);
 
     var operacao = int.parse(stdin.readLineSync()!);
     if (operacao == 3) {
-      exibeSelecionados();
+      listarProdutosSelecionados();
       break;
     }
 
-    selecionarOperacao(operacao);
+    switch (operacao) {
+      case 1:
+        manipularProdutosSelecionados(
+            listarProdutos, (id) => produtosSelecionados.add(produtos[id]));
+        break;
+      case 2:
+        manipularProdutosSelecionados(listarProdutosSelecionados,
+            (id) => produtosSelecionados.remove(produtosSelecionados[id]));
+        break;
+    }
   }
 }
 
 // função sem retorno e com paramentro
-void selecionarOperacao(int operacao) {
-  switch (operacao) {
-    case 1:
-      produtosSelecionados2.add(selecionarProduto());
-      break;
-    case 2:
-      print("Selecione um produto: ");
-      var id = int.parse(stdin.readLineSync()!) - 1;
-      produtosSelecionados2.remove(selecionarDosProdutosSelecionados(id));
-      break;
+void manipularProdutosSelecionados(
+    Function listarProdutos, Function manipularLista) {
+  listarProdutos();
+  print("Selecione um produto: ");
+  var id = int.parse(stdin.readLineSync()!) - 1;
+
+  manipularLista(id);
+}
+
+void listarProdutos() {
+  int count = 1;
+  print("\nLista de PRODUTOS");
+  for (var e in produtos) {
+    print("$count - ${e.nome}");
+    count++;
+  }
+}
+
+void listarProdutosSelecionados() {
+  int count = 1;
+  print("\nProdutos SELECIONADOS: ");
+  for (var item in produtosSelecionados) {
+    print("$count - ${item.nome}");
+    count++;
   }
 }
 
@@ -54,7 +80,7 @@ void selecionarOperacao(int operacao) {
 Produto selecionarProduto() {
   int count = 1;
   print("\nLista de PRODUTOS");
-  for (var e in produtos2) {
+  for (var e in produtos) {
     print("$count - ${e.nome}");
     count++;
   }
@@ -62,21 +88,12 @@ Produto selecionarProduto() {
   print("Selecione um produto: ");
   var id = int.parse(stdin.readLineSync()!) - 1;
 
-  return produtos2[id];
+  return produtos[id];
 }
 
 // função com retorno e com parâmetro
 Produto selecionarDosProdutosSelecionados(int id) {
-  return produtosSelecionados2[id];
-}
-
-void exibeSelecionados() {
-  print("\nProdutos SELECIONADOS: ");
-  int count = 1;
-  for (var item in produtosSelecionados2) {
-    print("$count - ${item.nome}");
-    count++;
-  }
+  return produtosSelecionados[id];
 }
 
 class Produto {
