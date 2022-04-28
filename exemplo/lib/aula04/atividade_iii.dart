@@ -7,7 +7,7 @@ Exercício 01 - implemente as funções
 
 import 'dart:io';
 
-main() {
+void show() {
   // // valida se par
   // solicitarNumeroEValidar(validarSePar);
   // // valida se maior que zero

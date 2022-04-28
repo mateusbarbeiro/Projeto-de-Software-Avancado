@@ -1,8 +1,3 @@
-// (1) Criar um projeto chamado de funções;
-// (2) Criar 4 arquivos: funções sem retorno e sem parâmetro, funções sem retorno e com parâmetro, funções com retorno e sem parâmetro, funções com retorno e com parâmetro;
-// (3) Para cada arquivo, criar o  método show - sem retorno, sem parâmetro com um print de teste; e
-// (4) Chamar o método show de cada aquivo no método main.
-
 // // aula 02
 // import 'package:exemplo/aula02/funcoes_sem_retorno_e_sem_parametros.dart'
 //     as f_sem_retorno_sem_parametros;
@@ -16,6 +11,10 @@
 // // aula 03
 // import 'package:exemplo/aula03/atividade.dart' as atividade;
 
+// // aula 04
+// import 'package:exemplo/aula04/atividade_ii.dart' as atividade_ii;
+// import 'package:exemplo/aula04/atividade_iii.dart' as atividade_iii;
+
 // Meu projeto: TEUS CONTROLE
 import 'package:exemplo/projeto_pessoal/teus_controle.dart' as projeto;
 
@@ -28,6 +27,10 @@ void main(List<String> arguments) {
 
   // // aula 03
   // atividade.show();
+
+  // // aula 04
+  // atividade_ii.show();
+  // atividade_iii.show();
 
   // TeusControles
   projeto.menu();

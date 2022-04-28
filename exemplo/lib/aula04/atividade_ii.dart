@@ -1,4 +1,4 @@
-void main() {
+void show() {
   var salario = 100.0;
   var valor = 10.0;
   //Exercício 1 - faça a chamada do método adicionarSalario validando se o valor é positivo.
