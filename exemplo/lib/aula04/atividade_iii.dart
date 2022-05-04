@@ -15,9 +15,13 @@ void show() {
   // // valida se primo
   // solicitarNumeroEValidar(validarSePrimo);
 
-  solicitarDataInicialECalcula(calcularQuantidadeAnos);
-  solicitarDataInicialECalcula(calcularQuantidadeDias);
-  solicitarDataInicialECalcula(calcularQuantidadeHoras);
+  // solicitarDataInicialECalcula(calcularQuantidadeAnos);
+  // solicitarDataInicialECalcula(calcularQuantidadeDias);
+  // solicitarDataInicialECalcula(calcularQuantidadeHoras);
+
+  solicitarQuantidadeDiasValorECalculaSalario(calcularAuxiliar);
+  solicitarQuantidadeDiasValorECalculaSalario(calcularJunior);
+  solicitarQuantidadeDiasValorECalculaSalario(calcularPleno);
 }
 
 void solicitarNumeroEValidar(Function(int id) validacao) {
@@ -73,7 +77,7 @@ String calcularQuantidadeHoras(DateTime data) {
 
 // c) Função que solicite a quantidade de dias trabalhadas, valor que recebe por hora e calcule o salarário para: (1) auxiliar; (2) júnior; e (3) pleno.
 // Exercício 02 - para cada função "hospedeira", defina uma função anônima.
-void solicitarQuantidadeDias(Function calculo) {
+void solicitarQuantidadeDiasValorECalculaSalario(Function calculo) {
   int quantidadeDias = int.parse(stdin.readLineSync()!);
   double valorPorHora = double.parse(stdin.readLineSync()!);
   print(calculo(quantidadeDias, valorPorHora));

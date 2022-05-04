@@ -3,9 +3,9 @@
 import 'dart:io';
 
 List<Produto> produtos = [
-  Produto('Oleo', 10.0),
-  Produto('Filtro de ar', 25.0),
-  Produto('Amortecedor', 150.5),
+  Produto('Oleo', 10.0, Categoria.lubrificantes),
+  Produto('Filtro de ar', 25.0, Categoria.filtros),
+  Produto('Amortecedor', 150.5, Categoria.pecas),
 ];
 
 List<Produto> produtosSelecionados = [];
@@ -22,16 +22,21 @@ void menu() {
 
     print("""
 
-Operações
-1 - Selecionar um produto
-2 - Remover um produto selecionado
-3 - Finalizar e listar produtos
+      Operações
+      1 - Selecionar um produto
+      2 - Remover um produto selecionado
+      3 - Finalizar e listar produtos
 
-Digite a operação: """);
+      Digite a operação: """);
 
     var operacao = int.parse(stdin.readLineSync()!);
     if (operacao == 3) {
       listarProdutosSelecionados();
+
+      print(calcularValorTotal(
+          possuiPromocao: (valor, categoria) =>
+              valor > 10 && categoria == Categoria.filtros,
+          porcentagemDesconto: 5));
       break;
     }
 
@@ -58,6 +63,7 @@ void manipularProdutosSelecionados(
   manipularLista(id);
 }
 
+// função sem retorno e sem parâmetro
 void listarProdutos() {
   int count = 1;
   print("\nLista de PRODUTOS");
@@ -67,6 +73,7 @@ void listarProdutos() {
   }
 }
 
+// função sem retorno e sem parâmetro
 void listarProdutosSelecionados() {
   int count = 1;
   print("\nProdutos SELECIONADOS: ");
@@ -74,6 +81,21 @@ void listarProdutosSelecionados() {
     print("$count - ${item.nome}");
     count++;
   }
+}
+
+// função sem retorno e sem parâmetro
+String calcularValorTotal(
+    {required bool Function(double valor, Categoria categoria) possuiPromocao,
+    required int porcentagemDesconto}) {
+  var total = 0.0;
+  for (var item in produtosSelecionados) {
+    var desconto = 0.0;
+    if (possuiPromocao(total, item.categoria)) {
+      desconto = item.valor * (porcentagemDesconto / 100);
+    }
+    total += (item.valor - desconto);
+  }
+  return total.toString();
 }
 
 // função com retorno e sem paramentro
@@ -99,6 +121,9 @@ Produto selecionarDosProdutosSelecionados(int id) {
 class Produto {
   String nome;
   double valor;
+  Categoria categoria;
 
-  Produto(this.nome, this.valor);
+  Produto(this.nome, this.valor, this.categoria);
 }
+
+enum Categoria { lubrificantes, filtros, pecas }

@@ -15,8 +15,11 @@
 // import 'package:exemplo/aula04/atividade_ii.dart' as atividade_ii;
 // import 'package:exemplo/aula04/atividade_iii.dart' as atividade_iii;
 
-// Meu projeto: TEUS CONTROLE
-import 'package:exemplo/projeto_pessoal/teus_controle.dart' as projeto;
+// aula 05
+import 'package:exemplo/aula05/a_depuracao.dart' as a_depuracao_aprovacao;
+
+// // Meu projeto: TEUS CONTROLE
+// import 'package:exemplo/projeto_pessoal/teus_controle.dart' as projeto;
 
 void main(List<String> arguments) {
   // // aula 02
@@ -33,5 +36,8 @@ void main(List<String> arguments) {
   // atividade_iii.show();
 
   // TeusControles
-  projeto.menu();
+  // projeto.menu();
+
+  // aula 05
+  a_depuracao_aprovacao.show();
 }
