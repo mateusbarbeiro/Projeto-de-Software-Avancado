@@ -1,129 +1,277 @@
 // 27/04/2022 conceito C
-
+// 04/04/2022 conceito A
 import 'dart:io';
 
-List<Produto> produtos = [
-  Produto('Oleo', 10.0, Categoria.lubrificantes),
-  Produto('Filtro de ar', 25.0, Categoria.filtros),
-  Produto('Amortecedor', 150.5, Categoria.pecas),
+List<Produto> produtosCatalogo = [
+  Produto(nome: 'Feijão', categoria: Categoria.alimenticios),
+  Produto(nome: 'Smartphone', categoria: Categoria.eletronicos),
+  Produto(nome: 'Coca-Cola', categoria: Categoria.bebidas),
+  Produto(nome: 'Game', categoria: Categoria.digitais),
 ];
 
-List<Produto> produtosSelecionados = [];
+List<Selecionado> produtosSelecionados = [];
 
 // função sem retorno e sem parâmetro
 void menu() {
   while (true) {
-    // lista produtos selecionados
     if (produtosSelecionados.isNotEmpty) {
-      listarProdutosSelecionados();
-    } else {
-      print("Não há produtos selecionados");
+      exibeSelecionados();
     }
 
-    print("""
-
-      Operações
-      1 - Selecionar um produto
-      2 - Remover um produto selecionado
-      3 - Finalizar e listar produtos
-
-      Digite a operação: """);
+    exibeOpcoes();
 
     var operacao = int.parse(stdin.readLineSync()!);
-    if (operacao == 3) {
-      listarProdutosSelecionados();
-
-      print(calcularValorTotal(
-          possuiPromocao: (valor, categoria) =>
-              valor > 10 && categoria == Categoria.filtros,
-          porcentagemDesconto: 5));
+    if (operacao == 4) {
+      exibeSelecionados();
       break;
     }
 
     switch (operacao) {
       case 1:
-        manipularProdutosSelecionados(
-            listarProdutos, (id) => produtosSelecionados.add(produtos[id]));
+        operacaoUm();
         break;
       case 2:
-        manipularProdutosSelecionados(listarProdutosSelecionados,
-            (id) => produtosSelecionados.remove(produtosSelecionados[id]));
+        operacaoDois();
+        break;
+      case 3:
+        operacaoTres();
         break;
     }
   }
 }
 
+// função com parâmetro e sem retorno
+void insereProdutoNaLista(Produto produto) {
+  var selecionado = buscaSelecionadoDadoProduto(produto);
+  print("Deseja informar quantidade [S/N] ");
+  String resposta = stdin.readLineSync()!.toUpperCase();
+  if (resposta == 'S') {
+    print("Quantidade: ");
+    int quantidade = int.parse(stdin.readLineSync()!);
+    incrementaQuantidadeSelecionado(selecionado, quantidade: quantidade);
+    return;
+  }
+
+  if (hasProdutoNaLista(produto)) {
+    incrementaQuantidadeSelecionado(selecionado);
+  } else {
+    produtosSelecionados.add(Selecionado(produto: produto));
+  }
+}
+
+bool hasProdutoNaLista(Produto produto) {
+  return produtosSelecionados.any((element) => element.produto == produto);
+}
+
+void decrementaQuantidadeSelecionado(Selecionado selecionado) {
+  selecionado.quantidade--;
+}
+
+Selecionado buscaSelecionadoDadoProduto(Produto produto) {
+  return produtosSelecionados
+      .firstWhere((element) => element.produto == produto);
+}
+
+// função com parâmetro e sem retorno
+void removerProdutoDaLista(Produto produto) {
+  print("Tem certeza que deseja remover: [S/N]");
+  String? resposta = stdin.readLineSync();
+  // confirmaRemocao(resposta: resposta);
+
+  Selecionado selecionado = buscaSelecionadoDadoProduto(produto);
+  if (selecionado.quantidade > 1) {
+    decrementaQuantidadeSelecionado(selecionado);
+  } else {
+    produtosSelecionados.remove(selecionado);
+  }
+}
+
+// função sem retorno e sem parâmetro
+void exibeProdutosCatalogo() {
+  int count = 1;
+  print("\nProdutos do CATALOGO");
+  for (var e in produtosCatalogo) {
+    print("$count - ${e.nome}");
+    count++;
+  }
+}
+
+// função sem retorno e sem parâmetro
+void exibeSelecionados() {
+  int count = 1;
+  print("\nProdutos SELECIONADOS: ");
+  print("\n[id]   [descrição]   [quantidade]");
+  for (var item in produtosSelecionados) {
+    print("$count     -     ${item.produto.nome}     -     ${item.quantidade}");
+    count++;
+  }
+}
+
+// função se retorno e sem parâmetro
+void exibeOpcoes() {
+  print("""
+
+Operações
+1 - Selecionar um produto
+2 - Remover um produto selecionados
+3 - Definir prioridade para selecionados
+4 - Finalizar 
+
+Digite a operação: """);
+}
+
+// função se retorno e sem parâmetros
+void operacaoUm() {
+  exibeProdutosCatalogo();
+  var produto = solicitaProduto()!; // TODO: problema se nao encontrar item
+  insereProdutoNaLista(produto);
+  // manipularProdutosSelecionados(
+  //     exibeProdutos, (id) => produtosSelecionados.add(produtosCatalogo[id]));
+}
+
+// função se retorno e sem parâmetro
+void operacaoDois() {
+  exibeSelecionados();
+  var produto = solicitaProduto(
+      TipoListas.selecionados)!; // TODO: problema se nao encontrar item
+  removerProdutoDaLista(produto);
+  // manipularProdutosSelecionados(exibeSelecionados,
+  //     (id) => produtosSelecionados.remove(produtosSelecionados[id]));
+}
+
+// função se retorno e sem parâmetro
+void operacaoTres() {
+  // função se retorno e sem parâmetro
+  // produto obrigatorio
+}
+
+//    DEPRECATED FUNCTIONS
+// função com retorno e sem paramentro
+Produto selecionarProduto() {
+  int count = 1;
+  print("\nLista de PRODUTOS");
+  for (var e in produtosCatalogo) {
+    print("$count - ${e.nome}");
+    count++;
+  }
+
+  print("Selecione um produto: ");
+  var id = int.parse(stdin.readLineSync()!) - 1;
+
+  return produtosCatalogo[id];
+}
+
+// função com retorno e com parâmetro
+Produto selecionarDosProdutosSelecionados(int id) {
+  return produtosSelecionados[id].produto;
+}
+
+// função sem retorno e sem parâmetros
+// String calcularValorTotal({
+//   required bool Function(double valor, Categoria categoria) possuiPromocao,
+//   required int porcentagemDesconto,
+// }) {
+//   var total = 0.0;
+//   for (var item in produtosSelecionados) {
+//     var desconto = 0.0;
+//     if (possuiPromocao(total, item.categoria)) {
+//       desconto = item.valor * (porcentagemDesconto / 100);
+//     }
+//     total += (item.valor - desconto);
+//   }
+//   return total.toString();
+// }
+//    FIM DEPRECATED FUNCTIONS
+
+//    CLASSES
+class Produto {
+  String nome;
+  Categoria categoria;
+
+  // parâmetros do construtor nomeados e obrigatórios
+  Produto({
+    required this.nome,
+    required this.categoria,
+  });
+}
+
+class Selecionado {
+  Produto produto;
+  int quantidade;
+  int prioridade;
+
+  // parâmetros do construtor nomeados
+  // Um parâmetro obrigatório
+  // Um parâmetro padrão
+  Selecionado({
+    required this.produto,
+    this.quantidade = 1,
+    this.prioridade = 1,
+  });
+}
+
+//    FIM CLASSES
+
+//    ENUMS
+enum Categoria {
+  alimenticios,
+  eletronicos,
+  digitais,
+  bebidas,
+}
+
+enum TipoListas {
+  catalogo,
+  selecionados,
+}
+//    FIM ENUMS
+
+// função com retorno e com parâmetro
+// 5 - função com parâmetros posicionais opcionais (valor padrão)
+Produto? solicitaProduto([TipoListas lista = TipoListas.catalogo]) {
+  var id = int.parse(stdin.readLineSync()!) - 1;
+
+  if (lista == TipoListas.catalogo) {
+    return produtosCatalogo[id];
+  } else if (lista == TipoListas.selecionados) {
+    return produtosSelecionados[id].produto;
+  }
+  return null;
+}
+
 // função sem retorno e com paramentro
-void manipularProdutosSelecionados(
-    Function listarProdutos, Function manipularLista) {
-  listarProdutos();
+// 6 -função com parâmetros nomeados obrigatórios;
+void manipularProdutosSelecionados({
+  required Function exibeProdutos,
+  required Function manipularLista,
+}) {
+  exibeProdutos();
   print("Selecione um produto: ");
   var id = int.parse(stdin.readLineSync()!) - 1;
 
   manipularLista(id);
 }
 
-// função sem retorno e sem parâmetro
-void listarProdutos() {
-  int count = 1;
-  print("\nLista de PRODUTOS");
-  for (var e in produtos) {
-    print("$count - ${e.nome}");
-    count++;
+// 7 -função com parâmetros nomeados opcionais;
+bool deveRemover({String resposta = "N"}) {
+  if (resposta == "N") {
+    return false;
+  } else if (resposta == "S") {
+    return true;
+  } else {
+    return false;
   }
 }
 
-// função sem retorno e sem parâmetro
-void listarProdutosSelecionados() {
-  int count = 1;
-  print("\nProdutos SELECIONADOS: ");
-  for (var item in produtosSelecionados) {
-    print("$count - ${item.nome}");
-    count++;
-  }
+// 8 - função com parâmetros nomeados obrigatórios e opcionais;
+void alteraPrioridade({required Selecionado selecionado, int prioridade = 1}) {
+  selecionado.prioridade = prioridade;
 }
 
-// função sem retorno e sem parâmetro
-String calcularValorTotal(
-    {required bool Function(double valor, Categoria categoria) possuiPromocao,
-    required int porcentagemDesconto}) {
-  var total = 0.0;
-  for (var item in produtosSelecionados) {
-    var desconto = 0.0;
-    if (possuiPromocao(total, item.categoria)) {
-      desconto = item.valor * (porcentagemDesconto / 100);
-    }
-    total += (item.valor - desconto);
-  }
-  return total.toString();
+// 9 - função com parâmetros nomeados e posicionais
+void incrementaQuantidadeSelecionado(
+  Selecionado selecionado, {
+  int quantidade = 1,
+}) {
+  selecionado.quantidade += quantidade;
 }
-
-// função com retorno e sem paramentro
-Produto selecionarProduto() {
-  int count = 1;
-  print("\nLista de PRODUTOS");
-  for (var e in produtos) {
-    print("$count - ${e.nome}");
-    count++;
-  }
-
-  print("Selecione um produto: ");
-  var id = int.parse(stdin.readLineSync()!) - 1;
-
-  return produtos[id];
-}
-
-// função com retorno e com parâmetro
-Produto selecionarDosProdutosSelecionados(int id) {
-  return produtosSelecionados[id];
-}
-
-class Produto {
-  String nome;
-  double valor;
-  Categoria categoria;
-
-  Produto(this.nome, this.valor, this.categoria);
-}
-
-enum Categoria { lubrificantes, filtros, pecas }
