@@ -1,0 +1,68 @@
+O que é e para que serve tratamento de erros?
+	Permite a criação de programas tolerantes a falhas, ou seja, ao acontecer um erro,
+	conseguimos captura-lo e tomar ações de acordo com o erro, como apresentar uma mensagem amigável,
+	evitando que interrompa a execução do sistema.
+
+Quais são as formas de tratamentos de erros?
+	Bloco try e catch
+	Clausula throws
+
+Qual a diferença entre erro e exceção? 
+	Erros interrompem a execução do programa, podendo ser erros de interpretação ou erro de execução.
+	Exceções surgiram a partir do paradigma de orientação a objeto para indicar e manipular erros em 
+	tempo de execução;
+
+Qual a diferença entre exceção implícita (contornável) e explícita (incontornável)? 
+	Implícita são exceções identificadas pela própria linguagem de programa
+		Ex.:	ponteiro	nulo,	índice	fora	dos	limites
+	Explícita são exceções lançadas pelo programa quando uma situação inesperada é encontrada
+		Ex.:	entrada	de	dados	inválida,	fim	de	arquivo
+
+O que são: (1) throwables; (2) Checked Exception; e (3) Unchecked (Runtime)?
+	Throwable é a classe pai de todas outras classes de exceções e erros
+	Checked Exception são exceções pegas em tempo de compilação, exceções condicionais dentro da lógica 
+		do código que devem ser tratadas relançando ou por blocos try catch
+	Unchecked (Runtime) são exceções lançadas em tempo de execução, são erros de programação fatais
+
+Quais são os tratamentos de erros existentes no dart?
+	Bloco try e catch
+	Clausula throws
+
+Quais são as principais exceções existentes no dart?
+	Classes de exceção DefferedLoadException, FromatException, IntegerDivisionByZeroException,
+	IOEException, IsolateSpawnException
+
+O que é para que serve o bloco try-catch? O que é e como utilizamos o objeto de exceção? O que é e 
+como utilizamos o objeto Stack trace?
+	é uma declaração que linguagens de programação possuem para delimitar um bloco de instruções que pode lançar uma
+	exceção. No bloco try, definimos instruções que podem ou não lançar exceções. No bloco catch, recebemos por parâmetro 
+	a exceção lançada, ou seja, o objeto de exceção contendo informações desta, e em seguida definimos as instruções de
+	resposta dado a exceção. Uma stack trace é uma pilha de chamadas de métodos que levam ao lançamento da exceção, 
+	utilizada para depurar e analisar o caminho até que a exceção ocorra.
+
+Explique e exemplifique o uso das cláusulas on e finally no bloco try-catch.
+	a clausula finally define o que será executado apos o bloco try e das clausulas catch e on. O bloco on é utilizado quando se tem
+	certeza do tipo da exceção lançada. 
+
+	try {   
+	  // bloco onde a exceção poderá ser lançada
+	}    
+	on Exception1 { 
+	  // trata exceção do tipo Exception1
+	}    
+	catch(e) {  
+	  // trata demais exceções
+	}    
+	finally {   
+	   // bloco que será sempre executado, sendo ou não lançada exceção
+	}  
+
+Implemente o try-catch (com relevância) em nas funções do seu projeto.
+	bloco try-catch foi utilizado para chamar as operações do sistema.
+
+É possível criar exceções específicas? Se sim, em que caso podem ser utilizas?
+analise o seu projeto e crie exceções específicas que facilite a localização e a manutenção do projeto.
+	sim, é possível criar exceções específicas ao definir uma classe e implementar a Exception. Um dos motivos para 
+	se criar exceções customizadas se da quando vc deseja um um tratamento especial com uma mensagem específica ao usuário 
+	para determinada situação for violada.
+	No projeto, foi criado a exceção customizada NotFound, usada quando buscado um produto e este nao for encontrado. 

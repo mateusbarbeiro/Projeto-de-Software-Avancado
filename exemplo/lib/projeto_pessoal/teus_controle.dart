@@ -26,16 +26,22 @@ void menu() {
       break;
     }
 
-    switch (operacao) {
-      case 1:
-        operacaoUm();
-        break;
-      case 2:
-        operacaoDois();
-        break;
-      case 3:
-        operacaoTres();
-        break;
+    try {
+      switch (operacao) {
+        case 1:
+          operacaoUm();
+          break;
+        case 2:
+          operacaoDois();
+          break;
+        case 3:
+          operacaoTres();
+          break;
+      }
+    } on NotFound catch (e) {
+      print(e.cause);
+    } catch (e) {
+      print(e.toString());
     }
   }
 }
@@ -123,7 +129,12 @@ Digite a operação: """);
 // função se retorno e sem parâmetros
 void operacaoUm() {
   exibeProdutosCatalogo();
-  var produto = solicitaProduto()!; // TODO: problema se nao encontrar item
+  var produto = solicitaProduto();
+
+  if (produto == null) {
+    throw NotFound("Produto não encontrado.");
+  }
+
   insereProdutoNaLista(produto);
   // manipularProdutosSelecionados(
   //     exibeProdutos, (id) => produtosSelecionados.add(produtosCatalogo[id]));
@@ -132,11 +143,13 @@ void operacaoUm() {
 // função se retorno e sem parâmetro
 void operacaoDois() {
   exibeSelecionados();
-  var produto = solicitaProduto(
-      TipoListas.selecionados)!; // TODO: problema se nao encontrar item
+  var produto = solicitaProduto(TipoListas.selecionados);
+
+  if (produto == null) {
+    throw NotFound("Produto não encontrado.");
+  }
+
   removerProdutoDaLista(produto);
-  // manipularProdutosSelecionados(exibeSelecionados,
-  //     (id) => produtosSelecionados.remove(produtosSelecionados[id]));
 }
 
 // função se retorno e sem parâmetro
@@ -274,4 +287,9 @@ void incrementaQuantidadeSelecionado(
   int quantidade = 1,
 }) {
   selecionado.quantidade += quantidade;
+}
+
+class NotFound implements Exception {
+  String cause;
+  NotFound(this.cause);
 }
