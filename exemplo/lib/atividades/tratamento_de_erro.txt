@@ -57,6 +57,23 @@ Explique e exemplifique o uso das cláusulas on e finally no bloco try-catch.
 	   // bloco que será sempre executado, sendo ou não lançada exceção
 	}  
 
+O que é e como funciona o rethrow? Em que caso devemos utilizar? Exemplifique.
+	o rethrow é uma clausula do dart, que permite relançar uma Exception. Em um bloco catch, é possivel chamar o rethrow para
+	que a exceção seja lançada novamente e seja ou nao tratada por outro bloco try/catch.
+	
+	void main() {
+	  try {
+	    try {
+	      throw 1;
+	    } catch (e, s) {
+	      print("$e $s");
+	      rethrow; // relança a exceção, que é tratada pelo try/catch pai
+	    }
+	  } catch (e2, s2) {
+	    print("$e2 $s2"); // trata a exceção relançada
+	  }
+	}
+
 Implemente o try-catch (com relevância) em nas funções do seu projeto.
 	bloco try-catch foi utilizado para chamar as operações do sistema.
 
@@ -66,3 +83,7 @@ analise o seu projeto e crie exceções específicas que facilite a localizaçã
 	se criar exceções customizadas se da quando vc deseja um um tratamento especial com uma mensagem específica ao usuário 
 	para determinada situação for violada.
 	No projeto, foi criado a exceção customizada NotFound, usada quando buscado um produto e este nao for encontrado. 
+
+O que é e para que serve o Either? Qual a relação e qual a diferença com o try-cath? Faça um exemplo no contexto do seu projeto.
+	either é uma classe que da biblioteca dartz. Quando houver duas variáveis/atributos que não podem coexistir em um mesmo momento,
+	a classe either permite este controle. 

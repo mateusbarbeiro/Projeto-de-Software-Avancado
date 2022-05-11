@@ -37,8 +37,12 @@ void menu() {
         case 3:
           operacaoTres();
           break;
+        default:
+          throw InvalidInput("Opção invalida");
       }
     } on NotFound catch (e) {
+      print(e.cause);
+    } on InvalidInput catch (e) {
       print(e.cause);
     } catch (e) {
       print(e.toString());
@@ -48,20 +52,27 @@ void menu() {
 
 // função com parâmetro e sem retorno
 void insereProdutoNaLista(Produto produto) {
-  var selecionado = buscaSelecionadoDadoProduto(produto);
-  print("Deseja informar quantidade [S/N] ");
-  String resposta = stdin.readLineSync()!.toUpperCase();
-  if (resposta == 'S') {
-    print("Quantidade: ");
-    int quantidade = int.parse(stdin.readLineSync()!);
-    incrementaQuantidadeSelecionado(selecionado, quantidade: quantidade);
-    return;
-  }
+  try {
+    var selecionado = buscaSelecionadoDadoProduto(produto);
+    print("Deseja informar quantidade [S/N] ");
+    String resposta = stdin.readLineSync()!.toUpperCase();
+    if (resposta == 'S') {
+      print("Quantidade: ");
+      int quantidade = int.parse(stdin.readLineSync()!);
+      incrementaQuantidadeSelecionado(selecionado, quantidade: quantidade);
+      return;
+    } else if (resposta == "N") {
+    } else {
+      throw InvalidInput("Valor informado invalido");
+    }
 
-  if (hasProdutoNaLista(produto)) {
-    incrementaQuantidadeSelecionado(selecionado);
-  } else {
-    produtosSelecionados.add(Selecionado(produto: produto));
+    if (hasProdutoNaLista(produto)) {
+      incrementaQuantidadeSelecionado(selecionado);
+    } else {
+      produtosSelecionados.add(Selecionado(produto: produto));
+    }
+  } catch (e) {
+    rethrow;
   }
 }
 
@@ -161,17 +172,21 @@ void operacaoTres() {
 //    DEPRECATED FUNCTIONS
 // função com retorno e sem paramentro
 Produto selecionarProduto() {
-  int count = 1;
-  print("\nLista de PRODUTOS");
-  for (var e in produtosCatalogo) {
-    print("$count - ${e.nome}");
-    count++;
+  try {
+    int count = 1;
+    print("\nLista de PRODUTOS");
+    for (var e in produtosCatalogo) {
+      print("$count - ${e.nome}");
+      count++;
+    }
+
+    print("Selecione um produto: ");
+    var id = int.parse(stdin.readLineSync()!) - 1;
+
+    return produtosCatalogo[id];
+  } catch (e) {
+    rethrow;
   }
-
-  print("Selecione um produto: ");
-  var id = int.parse(stdin.readLineSync()!) - 1;
-
-  return produtosCatalogo[id];
 }
 
 // função com retorno e com parâmetro
@@ -242,14 +257,18 @@ enum TipoListas {
 // função com retorno e com parâmetro
 // 5 - função com parâmetros posicionais opcionais (valor padrão)
 Produto? solicitaProduto([TipoListas lista = TipoListas.catalogo]) {
-  var id = int.parse(stdin.readLineSync()!) - 1;
+  try {
+    var id = int.parse(stdin.readLineSync()!) - 1;
 
-  if (lista == TipoListas.catalogo) {
-    return produtosCatalogo[id];
-  } else if (lista == TipoListas.selecionados) {
-    return produtosSelecionados[id].produto;
+    if (lista == TipoListas.catalogo) {
+      return produtosCatalogo[id];
+    } else if (lista == TipoListas.selecionados) {
+      return produtosSelecionados[id].produto;
+    }
+    return null;
+  } catch (e) {
+    rethrow;
   }
-  return null;
 }
 
 // função sem retorno e com paramentro
@@ -258,11 +277,15 @@ void manipularProdutosSelecionados({
   required Function exibeProdutos,
   required Function manipularLista,
 }) {
-  exibeProdutos();
-  print("Selecione um produto: ");
-  var id = int.parse(stdin.readLineSync()!) - 1;
+  try {
+    exibeProdutos();
+    print("Selecione um produto: ");
+    var id = int.parse(stdin.readLineSync()!) - 1;
 
-  manipularLista(id);
+    manipularLista(id);
+  } catch (e) {
+    rethrow;
+  }
 }
 
 // 7 -função com parâmetros nomeados opcionais;
@@ -292,4 +315,9 @@ void incrementaQuantidadeSelecionado(
 class NotFound implements Exception {
   String cause;
   NotFound(this.cause);
+}
+
+class InvalidInput implements Exception {
+  String cause;
+  InvalidInput(this.cause);
 }
