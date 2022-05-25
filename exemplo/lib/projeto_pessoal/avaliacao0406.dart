@@ -152,7 +152,7 @@ Produto validaProduto({
   required Function(Produto) validacao,
 }) {
   if (!validacao(produto)) {
-    throw Expando("Produto Inválido.");
+    throw Exception("Produto Inválido.");
   }
 
   return produto;
@@ -184,6 +184,7 @@ Selecionado alteraPrioridade({
 }
 
 //    (iv)  testes unitários.
+// contida no arquivo lib\projeto_pessoal\avaliacao0406.dart
 
 // Como é avaliação, pode-se inserir comentários para explicar/justificar a
 // solução/implementação. Caso não tenha, irei interpretar conforme apresentado.
