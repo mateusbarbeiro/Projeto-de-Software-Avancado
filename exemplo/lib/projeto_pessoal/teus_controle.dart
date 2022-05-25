@@ -2,11 +2,38 @@
 // 04/04/2022 conceito A
 import 'dart:io';
 
+import 'package:exemplo/projeto_pessoal/classes.dart';
+import 'package:exemplo/projeto_pessoal/enums.dart';
+
 List<Produto> produtosCatalogo = [
-  Produto(nome: 'Feijão', categoria: Categoria.alimenticios),
-  Produto(nome: 'Smartphone', categoria: Categoria.eletronicos),
-  Produto(nome: 'Coca-Cola', categoria: Categoria.bebidas),
-  Produto(nome: 'Game', categoria: Categoria.digitais),
+  Produto(
+    nome: 'Feijão',
+    categoria: Categoria.alimenticios,
+    gtin: "",
+    quantidadeEmEstoque: 1,
+    preco: 0.0,
+  ),
+  Produto(
+    nome: 'Smartphone',
+    categoria: Categoria.eletronicos,
+    gtin: "",
+    quantidadeEmEstoque: 1,
+    preco: 0.0,
+  ),
+  Produto(
+    nome: 'Coca-Cola',
+    categoria: Categoria.bebidas,
+    gtin: "",
+    quantidadeEmEstoque: 1,
+    preco: 0.0,
+  ),
+  Produto(
+    nome: 'Game',
+    categoria: Categoria.digitais,
+    gtin: "",
+    quantidadeEmEstoque: 1,
+    preco: 0.0,
+  ),
 ];
 
 List<Selecionado> produtosSelecionados = [];
@@ -69,7 +96,7 @@ void insereProdutoNaLista(Produto produto) {
     if (hasProdutoNaLista(produto)) {
       incrementaQuantidadeSelecionado(selecionado);
     } else {
-      produtosSelecionados.add(Selecionado(produto: produto));
+      // produtosSelecionados.add(Selecionado(produto: produto)); // todo: resolver
     }
   } catch (e) {
     rethrow;
@@ -210,49 +237,6 @@ Produto selecionarDosProdutosSelecionados(int id) {
 //   return total.toString();
 // }
 //    FIM DEPRECATED FUNCTIONS
-
-//    CLASSES
-class Produto {
-  String nome;
-  Categoria categoria;
-
-  // parâmetros do construtor nomeados e obrigatórios
-  Produto({
-    required this.nome,
-    required this.categoria,
-  });
-}
-
-class Selecionado {
-  Produto produto;
-  int quantidade;
-  int prioridade;
-
-  // parâmetros do construtor nomeados
-  // Um parâmetro obrigatório
-  // Um parâmetro padrão
-  Selecionado({
-    required this.produto,
-    this.quantidade = 1,
-    this.prioridade = 1,
-  });
-}
-
-//    FIM CLASSES
-
-//    ENUMS
-enum Categoria {
-  alimenticios,
-  eletronicos,
-  digitais,
-  bebidas,
-}
-
-enum TipoListas {
-  catalogo,
-  selecionados,
-}
-//    FIM ENUMS
 
 // função com retorno e com parâmetro
 // 5 - função com parâmetros posicionais opcionais (valor padrão)
