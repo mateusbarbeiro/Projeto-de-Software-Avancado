@@ -1,6 +1,4 @@
 //    CLASSES
-import 'dart:io';
-
 import 'package:exemplo/projeto_pessoal/enums.dart';
 
 class Produto {
@@ -29,38 +27,37 @@ class Selecionado {
   // parâmetros do construtor nomeados
   // Um parâmetro obrigatório
   // Um parâmetro padrão
-  Selecionado(
-      {required this.produto,
-      this.quantidade = 1,
-      this.prioridade = 1,
-      required this.date});
+  Selecionado({
+    required this.produto,
+    this.quantidade = 1,
+    this.prioridade = 1,
+    required this.date,
+  });
 }
 
-class Entrada {
+class EntradaProduto {
   DateTime date;
   List<Selecionado> selecionados;
   StatusEntrada status;
 
-  Entrada({
+  EntradaProduto({
     required this.selecionados,
     required this.date,
     required this.status,
   });
 }
 
-class Saida {
+class VendaProduto {
   DateTime date;
   List<Selecionado> selecionados;
   StatusSaida status;
   TipoPagamento pagamento;
-  TipoSaida tipo;
 
-  Saida({
+  VendaProduto({
     required this.selecionados,
     required this.date,
     required this.status,
     required this.pagamento,
-    required this.tipo,
   });
 }
 

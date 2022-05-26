@@ -22,31 +22,46 @@ Produto y = Produto(
   preco: 0.0,
 );
 
+var x = calculaParcelamento(
+  numeroParcelas: 5,
+  valorTotal: 100,
+  calcularParcela: (total, numeroParcela) => total / numeroParcela,
+);
+
+var a = calculaParcelamento(
+  numeroParcelas: 5,
+  valorTotal: 100,
+  calcularParcela: (total, numeroParcela) => (total / numeroParcela) + 10,
+);
+
 // 01
 // arrow function que verifica se quantidade em estoque é valida
-var x = validaProduto(
+var m = validaProduto(
   produto: y,
   validacao: (prod) => prod.quantidadeEmEstoque > 0,
 );
 
 // 02
-// anonymous function que verifica se código de barras do produto é válido
+// recebe função nomeada
 var z = validaProduto(
   produto: y,
-  validacao: (prod) {
-    if (prod.gtin.length != 13) {
-      return false;
-    }
-    return double.tryParse(prod.gtin) != null;
-  },
+  validacao: validaCodigoBarras,
 );
+
+// função auxiliar para validar código de barras
+bool validaCodigoBarras(Produto produto) {
+  if (produto.gtin.length != 13) {
+    return false;
+  }
+  return double.tryParse(produto.gtin) != null;
+}
 
 //    (ii)  parâmetros posicionais obrigatórios e opcionais;
 
 // 03
 // função que recebe lista e adiciona produto com informações padrão para
 // quantidade e prioridade
-List<Selecionado> adicionaItemSelecionado(
+List<Selecionado> adicionaProdutoItemSelecionado(
   List<Selecionado> selecionados,
   Produto produto, [
   int quantidade = 1,
@@ -65,12 +80,11 @@ List<Selecionado> adicionaItemSelecionado(
 // 04
 // função que recebe lista selecionados e cria entrada com informações padrão
 // para seu status
-Entrada criaEntrada(
-  List<Selecionado> selecionados,
-  Produto produto, [
+EntradaProduto criaEntradaProduto(
+  List<Selecionado> selecionados, [
   StatusEntrada statusEntrada = StatusEntrada.aberta,
 ]) {
-  var entrada = Entrada(
+  var entrada = EntradaProduto(
     date: DateTime.now(),
     selecionados: selecionados,
     status: statusEntrada,
@@ -82,19 +96,18 @@ Entrada criaEntrada(
 // 05
 // função que recebe lista selecionados e cria saída com informações padrão
 // para seu status, tipo de saída e meio de pagamento
-Saida criaSaida(
+VendaProduto criaVendaProduto(
   List<Selecionado> selecionados,
+  TipoPagamento formaPagamento,
   Produto produto, [
   StatusSaida statusSaida = StatusSaida.aberta,
   TipoSaida tipoSaida = TipoSaida.venda,
-  TipoPagamento meioDePagamento = TipoPagamento.nenhum,
 ]) {
-  var entrada = Saida(
+  var entrada = VendaProduto(
     date: DateTime.now(),
     selecionados: selecionados,
     status: statusSaida,
-    pagamento: meioDePagamento,
-    tipo: tipoSaida,
+    pagamento: formaPagamento,
   );
 
   return entrada;
@@ -103,41 +116,61 @@ Saida criaSaida(
 // 06
 // função que recebe uma saida, calcula valor total e aplica desconto dado tipo de
 // pagamento e se informado pelo parâmetro desconto, que é posicional e opcional.
-double calculaPrecoSaida(
-  Saida saida, [
+double aplicaDescontoVenda(
+  VendaProduto saidaProduto, [
   double desconto = 0,
 ]) {
+  double total = calculaPrecoTotalProdutosSelecionados(
+    saidaProduto.selecionados,
+  );
+
+  double descontoMeioPagamento = calculaDescontoDadoFormaPagamento(
+    saidaProduto.pagamento,
+    total,
+  );
+
+  double precoFinal = total - desconto - descontoMeioPagamento;
+  return precoFinal;
+}
+
+// função auxiliar para calcular valor total da lista de produtos selecionados
+double calculaPrecoTotalProdutosSelecionados(
+  List<Selecionado> produtosSelecionados,
+) {
   double total = 0.0;
-  for (var selecionado in saida.selecionados) {
+  for (var selecionado in produtosSelecionados) {
     total += selecionado.produto.preco * selecionado.quantidade;
   }
 
-  if (saida.tipo == TipoSaida.venda) {
-    if (saida.pagamento == TipoPagamento.dinheiro) {
-      desconto += total * 0.10;
-    } else if (saida.pagamento == TipoPagamento.pix) {
-      desconto += total * 0.15;
-    } else if (saida.pagamento == TipoPagamento.debito) {
-      desconto += total * 0.05;
-    } else if (saida.pagamento == TipoPagamento.credito) {
-      desconto += total * 0.03;
-    }
+  return total;
+}
+
+// função auxiliar para calcular desconto do meio de pagamento
+double calculaDescontoDadoFormaPagamento(
+  TipoPagamento meioPagamento,
+  double total,
+) {
+  if (meioPagamento == TipoPagamento.dinheiro) {
+    return total * 0.10;
+  } else if (meioPagamento == TipoPagamento.pix) {
+    return total * 0.15;
+  } else if (meioPagamento == TipoPagamento.debito) {
+    return total * 0.05;
+  } else if (meioPagamento == TipoPagamento.credito) {
+    return total * 0.03;
   }
 
-  return total - desconto;
+  return 0.0;
 }
 
 // 07
 // função que recebe uma entrada, calcula valor total e aplica desconto dado
 // parâmetro desconto, que é posicional e opcional.
-double calculaPrecoEntrada(
-  Entrada entrada, [
+double aplicaDescontoEntradaProduto(
+  EntradaProduto entrada, [
   double desconto = 0,
 ]) {
-  double total = 0.0;
-  for (var selecionado in entrada.selecionados) {
-    total += selecionado.produto.preco * selecionado.quantidade;
-  }
+  double total = calculaPrecoTotalProdutosSelecionados(entrada.selecionados);
 
   return total - desconto;
 }
@@ -182,6 +215,26 @@ Selecionado alteraPrioridade({
   selecionado.prioridade = prioridade;
   return selecionado;
 }
+
+// função para calcular parcelamento
+Map<String, double> calculaParcelamento({
+  required int numeroParcelas,
+  required double valorTotal,
+  required double Function(double, int) calcularParcela,
+}) {
+  Map<String, double> parcelas = {};
+
+  for (var i = 1; i <= numeroParcelas; i++) {
+    double valor = calcularParcela(valorTotal, numeroParcelas);
+
+    parcelas.addAll({
+      'parcela$i': valor,
+    });
+  }
+
+  return parcelas;
+}
+
 
 //    (iv)  testes unitários.
 // contida no arquivo lib\projeto_pessoal\avaliacao0406.dart

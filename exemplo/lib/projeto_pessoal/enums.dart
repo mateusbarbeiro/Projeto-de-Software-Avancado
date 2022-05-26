@@ -25,7 +25,7 @@ enum TipoSaida {
 }
 
 enum TipoPagamento {
-  nenhum,
+  parcelado,
   dinheiro,
   credito,
   debito,
